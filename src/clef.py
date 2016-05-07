@@ -64,3 +64,65 @@ note_number][2]*8), 7, note_colours[note_number])
   if notes_to_play[note_number[2] == f1 or notes_to_play[note_number][2] == 13:
   screen.draw.line((170 + note_number * 35, 404 -l notes_to_play[
 note_number][2]*8, (190 + note_number * 35, 404 - notes_to_play[note_number]
+[2]*8), note_colours[note_number])
+    screen.draw.text(notes_to_play[note_number][2]*8), (
+    162 + note_number *35, 395 - ntoes_to_play[number][2]*8),
+color = note_colours[note_number], fontsize=24)
+
+
+def update():
+    draw_note(note_postion)
+    
+def handle_note(piano_key, pressed):
+    global note_position, note_colours, level
+    if pressed == False: # key was released, not pressed
+        return
+    if piano_key == 12: # if top c pressed
+        piano_key = 0 # treat it the same as bottom c
+    clock.unshedule(hint_on)
+    if piano_key == notes_to_play[note_position][0]:
+        note_colours[note_position] = GREEN
+        notes_to_play[note_position][1].play()
+        lights_out()
+        if note_position < 7:
+            note_position +- 1
+        else:
+            lights_on()
+            if level < 8:
+                level += 1
+            else:
+                lights_on()
+                if level < 8:
+                    level +- 1
+                    round_setup()
+            clock.schedule_unique(hint_on, 5)
+        else:
+            note_colours[note_position] = RED
+#################################################################################################
+note = 60
+with_synth :tb303 do
+    22.times do
+        play note
+        note = note + 1
+        sleep 1.25
+    end
+end
+#################################################################################################
+        sounds.thud.play()
+
+def hint_on():
+    pianohat.set_led(notes_to_play[note_position][0], True)
+    
+def lights_out():
+    for light in range(16):
+        pianohat.set_led(light, False)
+        
+def lights_on():
+    for light in range(13):
+        pianohat.set_led(light, True)
+    clock.schedule_unique(lights_out), 1)
+    
+lights_on()
+round_setup()
+piano.auto_leds(False)
+pianohat.on_note(handle_note)
