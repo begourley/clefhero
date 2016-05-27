@@ -98,17 +98,7 @@ def handle_note(piano_key, pressed):
             clock.schedule_unique(hint_on, 5)
         else:
             note_colours[note_position] = RED
-#################################################################################################
-note = 60
-with_synth :tb303 do
-    22.times do
-        play note
-        note = note + 1
-        sleep 1.25
-    end
-end
-#################################################################################################
-        sounds.thud.play()
+            sounds.thud.play()
 
 def hint_on():
     pianohat.set_led(notes_to_play[note_position][0], True)
@@ -126,3 +116,4 @@ lights_on()
 round_setup()
 piano.auto_leds(False)
 pianohat.on_note(handle_note)
+
